@@ -6,7 +6,6 @@ import discord4j.core.DiscordClient;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.event.domain.lifecycle.ReadyEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
@@ -15,10 +14,11 @@ import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Message;
+import discord4j.core.object.entity.User;
+import discord4j.core.spec.BanQuerySpec;
 import discord4j.discordjson.json.MessageCreateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,19 +32,12 @@ public class CML {
         final DiscordClient client = DiscordClient.create(token);
         final GatewayDiscordClient gateway = client.login().block();
 
-
-        gateway.on(ReadyEvent.class, event ->
-                Mono.fromRunnable(() -> {
-                    try {
-                        new GlobalCommandRegistrar(client).registerCommands();
-                    } catch (Exception e) {
-                        logger.error(e.toString());
-                        logger.error(e.getMessage());
-                    }
-                    System.out.printf("Logged in as %s#%s%n", gateway.getSelf().block().getUsername(), gateway.getSelf().block().getDiscriminator());
-                })
-        );
-
+        try {
+            new GlobalCommandRegistrar(client).registerCommands();
+        } catch (Exception e) {
+            logger.error(e.toString());
+            logger.error(e.getMessage());
+        }
 
         gateway.on(MessageCreateEvent.class).subscribe(event -> {
             final Message message = event.getMessage();
@@ -73,6 +66,66 @@ public class CML {
                     MessageCreateRequest msg = MessageCreateRequest.builder().content(event.getInteraction().getUser().getMention() + " požádal o roli <@&" + id + ">").addComponent(ac.getData()).build();
                     client.getChannelById(Snowflake.of(931914067331923968L)).createMessage(msg).block();
                     return event.reply("Žádost o roli <@&" + id + "> byla odeslána").withEphemeral(true);
+                case "ban":
+                    User target = event.getOption("user")
+                            .flatMap(ApplicationCommandInteractionOption::getValue)
+                            .map(ApplicationCommandInteractionOptionValue::asUser)
+                            .orElse(null)
+                            .block();
+                    logger.info(target.getUsername());
+                    event.getInteraction().getGuild().block().getMemberById(target.getId()).block().ban(BanQuerySpec.builder().reason("Banned by CML").build()).block();
+                    return event.reply(target.getUsername() + " byl zabanován.").withEphemeral(true);
+                case "kick":
+                    User trg = event.getOption("user")
+                            .flatMap(ApplicationCommandInteractionOption::getValue)
+                            .map(ApplicationCommandInteractionOptionValue::asUser)
+                            .orElse(null)
+                            .block();
+                    event.getInteraction().getGuild().block().getMemberById(trg.getId()).block().kick("Banned by CML").block();
+                    return event.reply(trg.getUsername() + " byl vyhozen.").withEphemeral(true);
+                /*case "timeout":
+                    if(Objects.requireNonNull(event.getInteraction().getGuild().block().getMemberById(event.getInteraction().getUser().getId()).block()).getBasePermissions().block().contains(Permission.BAN_MEMBERS)) {
+                        User timeout = event.getOption("user")
+                                .flatMap(ApplicationCommandInteractionOption::getValue)
+                                .map(ApplicationCommandInteractionOptionValue::asUser)
+                                .orElse(null)
+                                .block();
+                        Long minutes = event.getOption("time")
+                                .flatMap(ApplicationCommandInteractionOption::getValue)
+                                .map(ApplicationCommandInteractionOptionValue::asLong)
+                                .orElse(null);
+                        logger.info(timeout.getUsername() + timeout.getDiscriminator());
+                        logger.info(String.valueOf(Duration.ofMinutes(minutes)));
+                        client.getGuildById(event.getInteraction().getGuild().block().getId()).getMember(timeout.getId()).block().user().
+                        MemberData to = client.getGuildById(event.getInteraction().getGuild().block().getId()).getMember(timeout.getId()).timeout(Duration.ofMinutes(minutes)).block();
+                        return event.reply(timeout.getUsername() + " byl pozastaven.").withEphemeral(true);
+                    } else {
+                        Long minutes = event.getOption("time").get().getValue().get().asLong();
+                        logger.info(String.valueOf(minutes));
+                        gateway.getGuildById(event.getInteraction().getGuild().block().getId()).block().getMemberById(event.getInteraction().getUser().getId()).timeout(Duration.ofMinutes(minutes)).block();
+                        return event.reply("⠐⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠂\n" +
+                                "⠄⠄⣰⣾⣿⣿⣿⠿⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣆⠄⠄\n" +
+                                "⠄⠄⣿⣿⣿⡿⠋⠄⡀⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠋⣉⣉⣉⡉⠙⠻⣿⣿⠄⠄\n" +
+                                "⠄⠄⣿⣿⣿⣇⠔⠈⣿⣿⣿⣿⣿⡿⠛⢉⣤⣶⣾⣿⣿⣿⣿⣿⣿⣦⡀⠹⠄⠄\n" +
+                                "⠄⠄⣿⣿⠃⠄⢠⣾⣿⣿⣿⠟⢁⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠄⠄\n" +
+                                "⠄⠄⣿⣿⣿⣿⣿⣿⣿⠟⢁⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠄⠄\n" +
+                                "⠄⠄⣿⣿⣿⣿⣿⡟⠁⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄⠄\n" +
+                                "⠄⠄⣿⣿⣿⣿⠋⢠⣾⣿⣿⣿⣿⣿⣿⡿⠿⠿⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⠄⠄\n" +
+                                "⠄⠄⣿⣿⡿⠁⣰⣿⣿⣿⣿⣿⣿⣿⣿⠗⠄⠄⠄⠄⣿⣿⣿⣿⣿⣿⣿⡟⠄⠄\n" +
+                                "⠄⠄⣿⡿⠁⣼⣿⣿⣿⣿⣿⣿⡿⠋⠄⠄⠄⣠⣄⢰⣿⣿⣿⣿⣿⣿⣿⠃⠄⠄\n" +
+                                "⠄⠄⡿⠁⣼⣿⣿⣿⣿⣿⣿⣿⡇⠄⢀⡴⠚⢿⣿⣿⣿⣿⣿⣿⣿⣿⡏⢠⠄⠄\n" +
+                                "⠄⠄⠃⢰⣿⣿⣿⣿⣿⣿⡿⣿⣿⠴⠋⠄⠄⢸⣿⣿⣿⣿⣿⣿⣿⡟⢀⣾⠄⠄\n" +
+                                "⠄⠄⢀⣿⣿⣿⣿⣿⣿⣿⠃⠈⠁⠄⠄⢀⣴⣿⣿⣿⣿⣿⣿⣿⡟⢀⣾⣿⠄⠄\n" +
+                                "⠄⠄⢸⣿⣿⣿⣿⣿⣿⣿⠄⠄⠄⠄⢶⣿⣿⣿⣿⣿⣿⣿⣿⠏⢀⣾⣿⣿⠄⠄\n" +
+                                "⠄⠄⣿⣿⣿⣿⣿⣿⣿⣷⣶⣶⣶⣶⣶⣿⣿⣿⣿⣿⣿⣿⠋⣠⣿⣿⣿⣿⠄⠄\n" +
+                                "⠄⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⢁⣼⣿⣿⣿⣿⣿⠄⠄\n" +
+                                "⠄⠄⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⢁⣴⣿⣿⣿⣿⣿⣿⣿⠄⠄\n" +
+                                "⠄⠄⠈⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⢁⣴⣿⣿⣿⣿⠗⠄⠄⣿⣿⠄⠄\n" +
+                                "⠄⠄⣆⠈⠻⢿⣿⣿⣿⣿⣿⣿⠿⠛⣉⣤⣾⣿⣿⣿⣿⣿⣇⠠⠺⣷⣿⣿⠄⠄\n" +
+                                "⠄⠄⣿⣿⣦⣄⣈⣉⣉⣉⣡⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⠉⠁⣀⣼⣿⣿⣿⠄⠄\n" +
+                                "⠄⠄⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣶⣾⣿⣿⡿⠟⠄⠄\n" +
+                                "⠠⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄").withEphemeral(true);
+                    }*/
             }
             return null;
         }).subscribe();

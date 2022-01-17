@@ -1,0 +1,21 @@
+{
+  "name": "timeout",
+  "type": 1,
+  "description": "Zastaví uživatele",
+  "options": [
+    {
+      "name": "user",
+      "description": "Koho chceš pozastavit?",
+      "type": 6,
+      "required": true,
+      "choices": []
+    },
+    {
+      "name": "time",
+      "description": "Na kolik minut",
+      "type": 4,
+      "required": true,
+      "choices": []
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "kick",
+  "type": 1,
+  "description": "Vyhodí uživatele",
+  "options": [
+    {
+      "name": "user",
+      "description": "Koho chceš vyhodit",
+      "type": 6,
+      "required": true,
+      "choices": []
+    }
+  ]
+}

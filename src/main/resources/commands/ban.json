@@ -1,0 +1,14 @@
+{
+  "name": "ban",
+  "type": 1,
+  "description": "Zabanuje uživatele",
+  "options": [
+    {
+      "name": "user",
+      "description": "Koho chceš zabanovat",
+      "type": 6,
+      "required": true,
+      "choices": []
+    }
+  ]
+}
