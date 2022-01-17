@@ -1,0 +1,14 @@
+{
+  "name": "rolepurge",
+  "type": 1,
+  "description": "Vyčistí role uživatele",
+  "options": [
+    {
+      "name": "user",
+      "description": "Koho role chceš vyčistit",
+      "type": 6,
+      "required": true,
+      "choices": []
+    }
+  ]
+}
