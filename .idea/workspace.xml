@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cccb0104-b6a9-4bfd-be1b-54376702c52c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/commands/ban.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/commands/kick.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/commands/timeout.json" afterDir="false" />
+    <list default="true" id="cccb0104-b6a9-4bfd-be1b-54376702c52c" name="Changes" comment="Slowly adding moderation commands">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cf/itoncek/cml/CML.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cf/itoncek/cml/CML.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/commands/timeout.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/timeout.json.disabled" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +43,11 @@
     <property name="project.structure.side.proportion" value="0.31317204" />
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="I:\#cml\src\main\resources" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="CML" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="cf.itoncek.cml.CML" />
@@ -74,6 +77,14 @@
       <option name="presentableId" value="Default" />
       <updated>1642414202631</updated>
     </task>
+    <task id="LOCAL-00001" summary="Slowly adding moderation commands">
+      <created>1642446402790</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1642446402790</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -87,5 +98,9 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Slowly adding moderation commands" />
+    <option name="LAST_COMMIT_MESSAGE" value="Slowly adding moderation commands" />
   </component>
 </project>
