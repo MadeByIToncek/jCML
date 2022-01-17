@@ -1,0 +1,55 @@
+{
+  "name": "jsem",
+  "type": 1,
+  "description": "Nastaví tábornickou příslušnost",
+  "options": [
+    {
+      "name": "tabor",
+      "description": "Role tábora o kterou prosíš",
+      "type": 3,
+      "required": true,
+      "choices": [
+        {
+          "name": "Filmový tábor",
+          "value": "931576210927013975"
+        },
+        {
+          "name": "Hudební tábor",
+          "value": "931576210927013974"
+        },
+        {
+          "name": "Modelingový tábor",
+          "value": "931576210927013973"
+        },
+        {
+          "name": "Robotický tábor",
+          "value": "931576210927013972"
+        },
+        {
+          "name": "Herecký tábor",
+          "value": "931576210927013971"
+        },
+        {
+          "name": "Výtvarný tábor",
+          "value": "931576210927013970"
+        },
+        {
+          "name": "Záchranářský tábor",
+          "value": "931576210927013969"
+        },
+        {
+          "name": "Tween camp",
+          "value": "931576210927013968"
+        },
+        {
+          "name": "Adrenalinový tábor",
+          "value": "931576210901839931"
+        },
+        {
+          "name": "Fotografický tábor",
+          "value": "931576210901839930"
+        }
+      ]
+    }
+  ]
+}
