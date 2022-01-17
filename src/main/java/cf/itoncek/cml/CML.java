@@ -12,12 +12,14 @@ import discord4j.core.object.component.ActionComponent;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.BanQuerySpec;
 import discord4j.discordjson.json.MessageCreateRequest;
 import discord4j.rest.util.Permission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,23 +128,11 @@ public class CML {
                                 "⠠⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄").withEphemeral(true);
                     }
                 case "rolepurge":
+
                     if (event.getInteraction().getGuild().block().getMemberById(event.getInteraction().getUser().getId()).block().getBasePermissions().block().contains(Permission.MANAGE_ROLES)) {
-                        User target = event.getOption("user")
-                                .flatMap(ApplicationCommandInteractionOption::getValue)
-                                .map(ApplicationCommandInteractionOptionValue::asUser)
-                                .orElse(null)
-                                .block();
-                        new java.util.Timer().schedule(
-                                new java.util.TimerTask() {
-                                    @Override
-                                    public void run() {
-                                        event.getInteraction().getGuild().block().getMemberById(target.getId()).block().getRoleIds().forEach(snowflake -> {
-                                            event.getInteraction().getGuild().block().getMemberById(target.getId()).block().removeRole(snowflake);
-                                        });
-                                    }
-                                },
-                                5000
-                        );
+                        methodThatTakesALongTime(event);
+                        return event.deferReply().withEphemeral(true);
+
                     } else {
                         return event.reply("⠐⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠂\n" +
                                 "⠄⠄⣰⣾⣿⣿⣿⠿⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣆⠄⠄\n" +
@@ -211,7 +201,7 @@ public class CML {
                                 "⠠⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄").withEphemeral(true);
                     }*/
             }
-            return null;
+        return event.reply("c");
         }).subscribe();
 
         gateway.on(ButtonInteractionEvent.class, event -> {
@@ -232,5 +222,16 @@ public class CML {
         }).subscribe();
 
         gateway.onDisconnect().block();
+    }
+    private static Mono<Message> methodThatTakesALongTime(ChatInputInteractionEvent event) {
+        User target = event.getOption("user")
+                .flatMap(ApplicationCommandInteractionOption::getValue)
+                .map(ApplicationCommandInteractionOptionValue::asUser)
+                .orElse(null)
+                .block();
+        event.getInteraction().getGuild().block().getMemberById(target.getId()).block().getRoleIds().forEach(snowflake -> {
+            event.getInteraction().getGuild().block().getMemberById(target.getId()).block().removeRole(snowflake).block();
+        });
+        return event.createFollowup("This took awhile but I'm done!");
     }
 }
