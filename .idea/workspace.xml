@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cccb0104-b6a9-4bfd-be1b-54376702c52c" name="Changes" comment="Adding command /rolepurge">
+    <list default="true" id="cccb0104-b6a9-4bfd-be1b-54376702c52c" name="Changes" comment="Docker?">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cf/itoncek/cml/CML.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cf/itoncek/cml/CML.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +33,9 @@
     <option name="selectedIndex" value="1" />
   </component>
   <component name="ProjectId" id="23oxNJMXuLHLcAZMRIA0MiQ5u00" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -54,8 +55,11 @@
       <recent name="I:\#cml\src\main\resources" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Docker.Docker">
     <configuration name="CML" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <envs>
+        <env name="TOKEN" value="NzA5NzA2NDE4NDQ1NjE1MTY0.Xrpzmw.aNNuq3xzIAJCM6eihq0b5Ci2Yo0" />
+      </envs>
       <option name="MAIN_CLASS_NAME" value="cf.itoncek.cml.CML" />
       <module name="cml" />
       <extension name="coverage">
@@ -68,6 +72,28 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Docker" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="imageTag" value="jcml" />
+          <option name="containerName" value="" />
+          <option name="envVars">
+            <list>
+              <DockerEnvVarImpl>
+                <option name="name" value="TOKEN" />
+                <option name="value" value="NzA5NzA2NDE4NDQ1NjE1MTY0.Xrpzmw.aNNuq3xzIAJCM6eihq0b5Ci2Yo0" />
+              </DockerEnvVarImpl>
+            </list>
+          </option>
+          <option name="sourceFilePath" value="Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.CML" />
+      <item itemvalue="Docker.Docker" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.CML" />
