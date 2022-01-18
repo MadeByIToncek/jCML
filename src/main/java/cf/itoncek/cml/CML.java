@@ -56,7 +56,7 @@ public class CML {
                     actionComponentList.add(no);
                     ActionRow ac = ActionRow.of(actionComponentList);
                     MessageCreateRequest msg = MessageCreateRequest.builder().content(event.getInteraction().getUser().getMention() + " požádal o roli <@&" + id + ">").addComponent(ac.getData()).build();
-                    client.getChannelById(Snowflake.of(931914067331923968L)).createMessage(msg).block();
+                    client.getChannelById(Snowflake.of(System.getenv("V_CHANNEL"))).createMessage(msg).block();
                     return event.reply("Žádost o roli <@&" + id + "> byla odeslána").withEphemeral(true);
                 case "ban":
                     if (event.getInteraction().getGuild().block().getMemberById(event.getInteraction().getUser().getId()).block().getBasePermissions().block().contains(Permission.BAN_MEMBERS)) {
