@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -106,12 +105,7 @@ public class GlobalCommandRegistrar {
         URL url = GlobalCommandRegistrar.class.getClassLoader().getResource(commandsFolderName);
         Objects.requireNonNull(url, commandsFolderName + " could not be found");
 
-        File folder;
-        try {
-            folder = new File(url.toURI());
-        } catch (URISyntaxException e) {
-            folder = new File(url.getPath());
-        }
+        File folder= new File("/usr/local/lib/classes/commands");
 
         //Get all the files inside this folder and return the contents of the files as a list of strings
         List<String> list = new ArrayList<>();

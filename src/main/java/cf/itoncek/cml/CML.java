@@ -29,7 +29,7 @@ public class CML {
     public static Logger logger = LoggerFactory.getLogger("cf.itoncek.cml.CML");
 
     public static void main(final String[] args) {
-        final String token = "NzA5NzA2NDE4NDQ1NjE1MTY0.Xrpzmw.krqW43oDjnPkFlHgBi16gJ0Yiew";
+        final String token = System.getenv("TOKEN");
         final DiscordClient client = DiscordClient.create(token);
         final GatewayDiscordClient gateway = client.login().block();
 
@@ -39,7 +39,6 @@ public class CML {
             logger.error(e.toString());
             logger.error(e.getMessage());
         }
-
 
         gateway.on(ChatInputInteractionEvent.class, event -> {
             switch (event.getCommandName()) {
