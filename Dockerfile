@@ -12,5 +12,4 @@ RUN mvn -f /home/app/pom.xml clean install
 FROM eclipse-temurin:17
 COPY --from=build /home/app/target/classes/commands/ /usr/local/lib/classes/commands
 COPY --from=build /home/app/target/cml-1.jar /usr/local/lib/cml-1.jar
-EXPOSE 8080
 ENTRYPOINT ["java","-jar","/usr/local/lib/cml-1.jar"]
