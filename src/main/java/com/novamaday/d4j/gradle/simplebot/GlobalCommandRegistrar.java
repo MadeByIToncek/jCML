@@ -30,10 +30,11 @@ public class GlobalCommandRegistrar {
         // Convenience variables for the sake of easier to read code below
         final ApplicationService applicationService = restClient.getApplicationService();
         final long applicationId = restClient.getApplicationId().block();
+        final long clientId = Long.parseLong(System.getenv("CLIENT_ID"));
 
         //These are commands already registered with discord from previous runs of the bot.
         Map<String, ApplicationCommandData> discordCommands = applicationService
-                .getGuildApplicationCommands(applicationId, 931576210901839922L)
+                .getGuildApplicationCommands(applicationId, clientId)
                 .collectMap(ApplicationCommandData::name)
                 .block();
 
@@ -48,7 +49,7 @@ public class GlobalCommandRegistrar {
             //Check if this is a new command that has not already been registered.
             if (!discordCommands.containsKey(request.name())) {
                 //Not yet created with discord, let's do it now.
-                applicationService.createGuildApplicationCommand(applicationId, 931576210901839922L, request).block();
+                applicationService.createGuildApplicationCommand(applicationId, clientId, request).block();
 
                 LOGGER.info("Created guild command: " + request.name());
             }
@@ -62,7 +63,7 @@ public class GlobalCommandRegistrar {
 
             if (command == null) {
                 //Removed command.json, delete guild command
-                applicationService.deleteGuildApplicationCommand(applicationId, 931576210901839922L, discordCommandId).block();
+                applicationService.deleteGuildApplicationCommand(applicationId, clientId, discordCommandId).block();
 
                 LOGGER.info("Deleted guild command: " + discordCommand.name());
                 continue; //Skip further processing on this command.
@@ -70,7 +71,7 @@ public class GlobalCommandRegistrar {
 
             //Check if the command has been changed and needs to be updated.
             if (hasChanged(discordCommand, command)) {
-                applicationService.modifyGuildApplicationCommand(applicationId, 931576210901839922L, discordCommandId, command).block();
+                applicationService.modifyGuildApplicationCommand(applicationId, clientId, discordCommandId, command).block();
 
                 LOGGER.info("Updated guild command: " + command.name());
             }
