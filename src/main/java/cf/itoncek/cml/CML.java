@@ -28,6 +28,10 @@ public class CML {
     public static final Logger logger = LoggerFactory.getLogger("cf.itoncek.cml.CML");
 
     public static void main(final String[] args) {
+        // ENVs required:
+        // - TOKEN
+        // - V_CHANNEL
+        // - GUILD_ID
         final String token = System.getenv("TOKEN");
         final DiscordClient client = DiscordClient.create(token);
         final GatewayDiscordClient gateway = client.login().block();
@@ -35,8 +39,11 @@ public class CML {
         try {
             new GlobalCommandRegistrar(client).registerCommands();
         } catch(Exception e) {
-            logger.error(e.toString());
             logger.error(e.getMessage());
+            for(StackTraceElement element : e.getStackTrace()) {
+                logger.error(element.toString());
+            }
+            logger.error(e.getLocalizedMessage());
         }
 
         assert gateway != null;
@@ -56,7 +63,7 @@ public class CML {
                     actionComponentList.add(no);
                     ActionRow ac = ActionRow.of(actionComponentList);
                     MessageCreateRequest msg = MessageCreateRequest.builder().content(event.getInteraction().getUser().getMention() + " požádal o roli <@&" + id + ">").addComponent(ac.getData()).build();
-                    client.getChannelById(Snowflake.of(System.getenv("V_CHANNEL"))).createMessage(msg).block();
+                    client.getChannelById(Snowflake.of(Long.parseLong(System.getenv("V_CHANNEL")))).createMessage(msg).block();
                     return event.reply("Žádost o roli <@&" + id + "> byla odeslána").withEphemeral(true);
                 case "ban":
                     if(Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(event.getInteraction().getGuild().block()).getMemberById(event.getInteraction().getUser().getId()).block()).getBasePermissions().block()).contains(Permission.BAN_MEMBERS)) {
