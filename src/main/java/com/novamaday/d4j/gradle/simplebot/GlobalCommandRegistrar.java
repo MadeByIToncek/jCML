@@ -35,12 +35,12 @@ public class GlobalCommandRegistrar {
         //These are commands already registered with discord from previous runs of the bot.
         Map<String, ApplicationCommandData> discordCommands = applicationService
                 .getGuildApplicationCommands(applicationId, guildId)
-                .collectMap(ApplicationCommandData::name)
+                .collectMap(ApplicationCommandData :: name)
                 .block();
 
         //Get our commands json from resources as command data
         Map<String, ApplicationCommandRequest> commands = new HashMap<>();
-        for (String json : getCommandsJson()) {
+        for(String json : getCommandsJson()) {
             ApplicationCommandRequest request = d4jMapper.getObjectMapper()
                     .readValue(json, ApplicationCommandRequest.class);
 
@@ -48,7 +48,7 @@ public class GlobalCommandRegistrar {
 
             //Check if this is a new command that has not already been registered.
             assert discordCommands != null;
-            if (!discordCommands.containsKey(request.name())) {
+            if(! discordCommands.containsKey(request.name())) {
                 //Not yet created with discord, let's do it now.
                 applicationService.createGuildApplicationCommand(applicationId, guildId, request).block();
 
@@ -58,12 +58,12 @@ public class GlobalCommandRegistrar {
 
         //Check if any commands have been deleted or changed.
         assert discordCommands != null;
-        for (ApplicationCommandData discordCommand : discordCommands.values()) {
+        for(ApplicationCommandData discordCommand : discordCommands.values()) {
             long discordCommandId = Long.parseLong(discordCommand.id());
 
             ApplicationCommandRequest command = commands.get(discordCommand.name());
 
-            if (command == null) {
+            if(command == null) {
                 //Removed command.json, delete guild command
                 applicationService.deleteGuildApplicationCommand(applicationId, guildId, discordCommandId).block();
 
@@ -72,7 +72,7 @@ public class GlobalCommandRegistrar {
             }
 
             //Check if the command has been changed and needs to be updated.
-            if (hasChanged(discordCommand, command)) {
+            if(hasChanged(discordCommand, command)) {
                 applicationService.modifyGuildApplicationCommand(applicationId, guildId, discordCommandId, command).block();
 
                 LOGGER.info("Updated guild command: " + command.name());
@@ -83,19 +83,19 @@ public class GlobalCommandRegistrar {
 
     private boolean hasChanged(ApplicationCommandData discordCommand, ApplicationCommandRequest command) {
         // Compare types
-        if (!discordCommand.type().toOptional().orElse(1).equals(command.type().toOptional().orElse(1))) return true;
+        if(! discordCommand.type().toOptional().orElse(1).equals(command.type().toOptional().orElse(1))) return true;
 
         //Check if description has changed.
-        if (!discordCommand.description().equals(command.description().toOptional().orElse(""))) return true;
+        if(! discordCommand.description().equals(command.description().toOptional().orElse(""))) return true;
 
         //Check if default permissions have changed
         boolean discordCommandDefaultPermission = discordCommand.defaultPermission().toOptional().orElse(true);
         boolean commandDefaultPermission = command.defaultPermission().toOptional().orElse(true);
 
-        if (discordCommandDefaultPermission != commandDefaultPermission) return true;
+        if(discordCommandDefaultPermission != commandDefaultPermission) return true;
 
         //Check and return if options have changed.
-        return !discordCommand.options().equals(command.options());
+        return ! discordCommand.options().equals(command.options());
     }
 
     /* The two below methods are boilerplate that can be completely removed when using Spring Boot */
@@ -108,13 +108,13 @@ public class GlobalCommandRegistrar {
         URL url = GlobalCommandRegistrar.class.getClassLoader().getResource(commandsFolderName);
         Objects.requireNonNull(url, commandsFolderName + " could not be found");
 
-        File folder= new File("/usr/local/lib/classes/commands");
+        File folder = new File("/usr/local/lib/classes/commands");
 
         //Get all the files inside this folder and return the contents of the files as a list of strings
         List<String> list = new ArrayList<>();
         File[] files = Objects.requireNonNull(folder.listFiles(), folder + " is not a directory");
 
-        for (File file : files) {
+        for(File file : files) {
             String resourceFileAsString = getResourceFileAsString(commandsFolderName + file.getName());
             list.add(resourceFileAsString);
         }
@@ -123,15 +123,16 @@ public class GlobalCommandRegistrar {
 
     /**
      * Gets a specific resource file as String
+     *
      * @param fileName The file path omitting "resources/"
      * @return The contents of the file as a String, otherwise throws an exception
      */
     private static String getResourceFileAsString(String fileName) throws IOException {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        try (InputStream resourceAsStream = classLoader.getResourceAsStream(fileName)) {
-            if (resourceAsStream == null) return null;
-            try (InputStreamReader inputStreamReader = new InputStreamReader(resourceAsStream);
-                 BufferedReader reader = new BufferedReader(inputStreamReader)) {
+        try(InputStream resourceAsStream = classLoader.getResourceAsStream(fileName)) {
+            if(resourceAsStream == null) return null;
+            try(InputStreamReader inputStreamReader = new InputStreamReader(resourceAsStream);
+                BufferedReader reader = new BufferedReader(inputStreamReader)) {
                 return reader.lines().collect(Collectors.joining(System.lineSeparator()));
             }
         }
