@@ -3,7 +3,7 @@
     "config:base"
   ],
   "schedule": [
-    "every day"
+    "before 11pm"
   ],
   "automerge": true,
   "rebaseWhen": "behind-base-branch"
