@@ -1,4 +1,4 @@
-package com.novamaday.d4j.gradle.simplebot;
+package cf.itoncek.cml;
 
 import discord4j.common.JacksonResources;
 import discord4j.discordjson.json.ApplicationCommandData;

@@ -1,0 +1,14 @@
+{
+  "name": "express",
+  "type": 1,
+  "description": "Vyjádří matematickou rovnici",
+  "options": [
+    {
+      "name": "expression",
+      "description": "Matematická rovnice",
+      "type": 3,
+      "required": true,
+      "choices": []
+    }
+  ]
+}
