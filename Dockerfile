@@ -9,7 +9,7 @@ RUN mvn -f /home/app/pom.xml clean install
 #
 # Package stage
 #
-FROM eclipse-temurin:18
+FROM eclipse-temurin:19
 COPY --from=build /home/app/target/classes/commands/ /usr/local/lib/classes/commands
 COPY --from=build /home/app/target/cml-1.jar /usr/local/lib/cml-1.jar
 ENTRYPOINT ["java","-jar","/usr/local/lib/cml-1.jar"]
